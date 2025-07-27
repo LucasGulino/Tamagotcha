@@ -1,0 +1,111 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String   @id @default(cuid())
+  worldId       String   @unique @map("world_id") // World ID unique
+  username      String?  @unique
+  avatar        String?
+  region        String?  @default("global")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+  
+  // Relations
+  posts         Post[]
+  reactions     Reaction[]
+  payments      Payment[]
+  leaderboardEntries LeaderboardEntry[]
+
+  @@map("users")
+}
+
+model Post {
+  id          String   @id @default(cuid())
+  content     String
+  imageUrl    String?  @map("image_url")
+  region      String   @default("global")
+  isBoosted   Boolean  @default(false) @map("is_boosted")
+  boostedUntil DateTime? @map("boosted_until")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  
+  // Relations
+  authorId    String   @map("author_id")
+  author      User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  reactions   Reaction[]
+  payments    Payment[]
+
+  @@map("posts")
+}
+
+model Reaction {
+  id        String      @id @default(cuid())
+  type      ReactionType
+  createdAt DateTime    @default(now()) @map("created_at")
+  
+  // Relations
+  userId    String      @map("user_id")
+  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  postId    String      @map("post_id")
+  post      Post        @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, postId]) // Un utilisateur ne peut réagir qu'une fois par post
+  @@map("reactions")
+}
+
+model Payment {
+  id              String        @id @default(cuid())
+  amount          Float         // Montant en WLD (toujours 0.2 pour les boosts)
+  currency        String        @default("WLD")
+  status          PaymentStatus @default(PENDING)
+  worldcoinTxHash String?       @map("worldcoin_tx_hash") // Hash de transaction Worldcoin
+  createdAt       DateTime      @default(now()) @map("created_at")
+  updatedAt       DateTime      @updatedAt @map("updated_at")
+  
+  // Relations
+  userId          String        @map("user_id")
+  user            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  postId          String        @map("post_id")
+  post            Post          @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@map("payments")
+}
+
+model LeaderboardEntry {
+  id        String   @id @default(cuid())
+  week      String   // Format: "2024-W01"
+  score     Int      @default(0) // Score basé sur les réactions reçues
+  region    String   @default("global")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  
+  // Relations
+  userId    String   @map("user_id")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, week, region]) // Un utilisateur par semaine par région
+  @@map("leaderboard_entries")
+}
+
+enum ReactionType {
+  LIKE
+  LOL
+  FACEPALM
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  CANCELLED
+}
+

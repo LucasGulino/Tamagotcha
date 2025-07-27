@@ -1,0 +1,167 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  
+  body {
+    @apply bg-background text-foreground font-sans;
+    background: linear-gradient(135deg, #FFF8DC 0%, #F0E68C 100%);
+    min-height: 100vh;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@layer components {
+  .btn-cartoon {
+    @apply px-6 py-3 rounded-cartoon font-bold text-white transition-all duration-200 transform;
+    @apply shadow-cartoon hover:shadow-cartoon-hover hover:-translate-y-1;
+    @apply active:translate-y-0 active:shadow-cartoon;
+  }
+
+  .btn-primary {
+    @apply btn-cartoon bg-primary-500 hover:bg-primary-600;
+  }
+
+  .btn-secondary {
+    @apply btn-cartoon bg-secondary-500 hover:bg-secondary-600;
+  }
+
+  .btn-satirical {
+    @apply btn-cartoon bg-satirical-yellow text-black hover:bg-yellow-400;
+    border: 3px solid #000;
+  }
+
+  .card-cartoon {
+    @apply bg-surface rounded-cartoon shadow-cartoon border-2 border-black p-4;
+    @apply transition-all duration-200 hover:shadow-cartoon-hover hover:-translate-y-1;
+  }
+
+  .input-cartoon {
+    @apply rounded-cartoon border-2 border-black px-4 py-2 font-medium;
+    @apply focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500;
+    @apply transition-all duration-200;
+  }
+
+  .text-cartoon {
+    @apply font-cartoon text-lg font-bold;
+  }
+
+  .speech-bubble {
+    @apply relative bg-white rounded-bubble p-4 border-2 border-black shadow-cartoon;
+  }
+
+  .speech-bubble::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 20px;
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-top: 10px solid white;
+  }
+
+  .speech-bubble::before {
+    content: '';
+    position: absolute;
+    bottom: -12px;
+    left: 18px;
+    width: 0;
+    height: 0;
+    border-left: 12px solid transparent;
+    border-right: 12px solid transparent;
+    border-top: 12px solid black;
+  }
+
+  .reaction-btn {
+    @apply p-2 rounded-full border-2 border-black bg-white hover:bg-gray-100;
+    @apply transition-all duration-200 transform hover:scale-110 active:scale-95;
+    @apply shadow-cartoon hover:shadow-cartoon-hover;
+  }
+
+  .boost-glow {
+    @apply ring-4 ring-satirical-yellow ring-opacity-50 animate-pulse-fast;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+  }
+
+  .loading-spinner {
+    @apply animate-spin rounded-full h-8 w-8 border-4 border-primary-200 border-t-primary-500;
+  }
+}
+
+@layer utilities {
+  .text-shadow-cartoon {
+    text-shadow: 2px 2px 0px rgba(0,0,0,0.3);
+  }
+
+  .bg-gradient-satirical {
+    background: linear-gradient(135deg, #FFD700 0%, #FF69B4 50%, #32CD32 100%);
+  }
+
+  .animate-bounce-in {
+    animation: bounceIn 0.6s ease-out;
+  }
+
+  .animate-slide-up {
+    animation: slideUp 0.3s ease-out;
+  }
+}
+
+@keyframes bounceIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+  70% {
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slideUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Scrollbar personnalisé */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
